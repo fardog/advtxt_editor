@@ -1,0 +1,24 @@
+{
+  "name": "advtxt_editor-frontend",
+  "version": "0.0.1",
+  "authors": [
+    "Nathan Wittstock <code@fardogllc.com>"
+  ],
+  "description": "",
+  "main": "assets/css/app.css",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+	"dependencies": {
+		"foundation": "5.0.*",
+		"knockout.js": "3.*",
+		"retina.js": "*",
+		"ace-builds": "1.1.*"
+	}
+}

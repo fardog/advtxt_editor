@@ -1,0 +1,61 @@
+doctype html
+html(lang="en")
+  head
+    title AdvText Editor
+    meta(charset="utf-8")
+    meta(name="viewport", content="width=device-width, initial-scale=1.0")
+    meta(name="description", content="PROJECT_DESCRIPTION")
+    meta(name="author", content="Nathan Wittstock, Far Dog LLC")
+    meta(name="keywords", content="PROJECT_KEYWORDS")
+    meta(name="copyright", content="Far Dog LLC, Copyright (c) 2014.")
+
+    script(type="text/javascript", src=modernizr)
+    each file in css
+      link(rel="stylesheet", href=file)
+  body
+    .editarea(data-bind="visible: editing")
+      .row
+        .medium-6.columns
+          h2 Room(
+            span(data-bind="text: room.data.x")
+            | ,
+            span(data-bind="text: room.data.y")
+            | )
+          label Name
+            input(type="text", data-bind="value: room.data.name")
+          label Description
+            textarea(data-bind="value: room.data.description")
+          label Map
+            input(type="text", data-bind="value: room.data.map")
+          button.small.button(data-bind="click: updateRoom") Save
+
+        .medium-6.columns
+          h3 Exits
+          div#exitsEditor.editor
+
+      .row
+        .medium-6.columns
+          h3 Commands
+          div#commandsEditor.editor
+        .medium-6.columns
+          h3 Items
+          div#itemsEditor.editor
+
+    .row
+      .medium-12.columns
+        h2 Rooms
+        ul.rooms(data-bind="foreach: rooms")
+          li(data-bind="click: $parent.selectRoom, css: {selected: selected(), occupied: occupied(), origin: origin()}")
+
+    .alert-box.warning(data-bind="visible: error, text: error", data-alert)
+
+    footer.row
+      hr
+      .medium-6.columns
+        | AdvText Editor
+      .medium-6.columns.text-right
+        | &copy; 2014 
+        a(href="http://fardogllc.com/", target="_blank") Far Dog LLC
+
+    each file in js
+      script(type="text/javascript", src=file)
