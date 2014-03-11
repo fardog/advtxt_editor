@@ -4,9 +4,9 @@ html(lang="en")
     title AdvText Editor
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    meta(name="description", content="PROJECT_DESCRIPTION")
+    meta(name="description", content="")
     meta(name="author", content="Nathan Wittstock, Far Dog LLC")
-    meta(name="keywords", content="PROJECT_KEYWORDS")
+    meta(name="keywords", content="")
     meta(name="copyright", content="Far Dog LLC, Copyright (c) 2014.")
 
     script(type="text/javascript", src=modernizr)
@@ -25,6 +25,7 @@ html(lang="en")
             input(type="text", data-bind="value: room.data.name")
           label Description
             textarea(data-bind="value: room.data.description")
+            div.text-right(data-bind="text: room.data.description().length")
           label Map
             input(type="text", data-bind="value: room.data.map")
           button.small.button(data-bind="click: updateRoom") Save

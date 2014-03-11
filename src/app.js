@@ -26,7 +26,7 @@ $(document).ready(function() {
 				x: ko.observable(),
 				y: ko.observable(),
 				name: ko.observable(),
-				description: ko.observable(),
+				description: ko.observable(""),
 				map: ko.observable("default"),
 				exits: ko.observable(),
 				commands: ko.observable(),
@@ -81,6 +81,8 @@ $(document).ready(function() {
 			// create a 2D matrix of all the occupied rooms
 			var occupationMatrix = [[]];
 			for (var i = 0; i < rooms.length; i++) {
+				if (typeof occupationMatrix[rooms[i].x] === 'undefined')
+					occupationMatrix[rooms[i].x] = [];
 				occupationMatrix[rooms[i].x][rooms[i].y] = true;
 			}
 
@@ -152,13 +154,13 @@ $(document).ready(function() {
 				self.room.data.name("");
 				self.room.data.description("");
 				self.room.data.map("default");
-				self.room.data.exits("");
-				self.room.data.commands("");
-				self.room.data.items("");
+				self.room.data.exits("player.exits = {};");
+				self.room.data.commands("player.commands = {};");
+				self.room.data.items("player.items = {};");
 
-				self.exitsEditor.setValue("");
-				self.commandsEditor.setValue("");
-				self.itemsEditor.setValue("");
+				self.exitsEditor.setValue("player.exits = {};");
+				self.commandsEditor.setValue("player.commands = {};");
+				self.itemsEditor.setValue("player.items = {};");
 			}
 			// otherwise we're editing an existing room
 			else {
