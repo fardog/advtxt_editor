@@ -1,8 +1,8 @@
 {
-    "name": "backend",
+    "name": "advtxt_backend",
     "private": true,
     "version": "0.0.0",
-    "description": "a Sails application",
+    "description": "The backend for AdvTxt Editor",
     "dependencies": {
         "sails": "0.9.11",
         "grunt": "0.4.1",
@@ -17,6 +17,6 @@
     },
     "main": "app.js",
     "repository": "",
-    "author": "",
-    "license": ""
+    "author": "Nathan Wittstock <code@fardogllc.com>",
+    "license": "MIT"
 }
