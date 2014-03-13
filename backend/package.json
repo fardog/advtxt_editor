@@ -1,0 +1,22 @@
+{
+    "name": "advtxt_editor-backend",
+    "private": true,
+    "version": "0.0.1",
+    "description": "The backend for AdvTxt Editor",
+    "dependencies": {
+        "sails": "0.9.11",
+        "grunt": "0.4.1",
+        "sails-disk": "~0.9.0",
+				"sails-mongo": "^0.9.7",
+        "ejs": "0.8.4",
+        "optimist": "0.3.4"
+    },
+    "scripts": {
+        "start": "node app.js",
+        "debug": "node debug app.js"
+    },
+    "main": "app.js",
+    "repository": "",
+    "author": "Nathan Wittstock <code@fardogllc.com>",
+    "license": "MIT"
+}
