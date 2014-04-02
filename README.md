@@ -4,7 +4,8 @@ AdvTxt Editor
 The AdvTxt Editor is a quickly-assembed app for editing [AdvTxt][advtxt] rooms.
 
 What follows is an off-the-cuff explanation of how to get things running, but 
-it's probably incomplete. I'll fill this out more when the time comes.
+it's probably incomplete. This editor is sort of nasty and is only provided to 
+get the job at hand done, not to be pretty or friendly while doing it.
 
 Get the Editor Running
 ----------------------
@@ -81,7 +82,7 @@ time the user enters the room.
 it's a command, this is the action word/words ("get", "jump", "push")
 - Move — If passed, you move in the direction specified (8-way cardinal 
 directions)
-- Item — If passed, you get or lose these items. Gottem items are specified with 
+- Item — If passed, you get or lose these items. Gotten items are specified with 
 a "+" in front, lost with a "-". Items are just string identifiers that are 
 matched against with a Javascript `===` after being lowercased. For example: 
 "+key" gives you an item called "key", "-key" takes that key away, if you have 
