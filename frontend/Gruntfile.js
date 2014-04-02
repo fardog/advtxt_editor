@@ -6,10 +6,11 @@ module.exports = function (grunt) {
 	var modernizr = 'bower_components/modernizr/modernizr.js';
 	var jsFiles = [
 		'bower_components/jquery/dist/jquery.min.js',
+    'bower_components/jquery-ui/ui/jquery-ui.js',
+    'bower_components/lodash/dist/lodash.js',
 		'bower_components/retina.js/src/retina.js',
 		'bower_components/knockout.js/knockout.js',
 		'bower_components/foundation/js/foundation/foundation.js',
-		'bower_components/ace-builds/src-noconflict/ace.js',
 		'assets/js/app.js'
 	];
 
@@ -112,7 +113,8 @@ module.exports = function (grunt) {
 				options: {
 					port: 8002,
 					base: [path.join(__dirname, 'build'), __dirname],
-					livereload: true
+					livereload: true,
+					socketio: true
 				}
 			}
 		}
@@ -124,7 +126,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-watch');
-	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks('grunt-connect-socket.io');
 
 
 	grunt.registerTask('default', ['copy:dev', 'sass:dev', 'jade:dev']);
