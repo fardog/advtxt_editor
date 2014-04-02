@@ -10,13 +10,10 @@ module.exports = {
 
   attributes: {
 		name: 'STRING',
-		description: 'TEXT',
 		x: 'INTEGER',
 		y: 'INTEGER',
 		map: 'STRING',
-		exits: 'TEXT',
-		commands: 'TEXT',
-		items: 'TEXT'
+    attributes: 'ARRAY'
   }
 
 };

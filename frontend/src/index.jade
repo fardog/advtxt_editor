@@ -13,42 +13,74 @@ html(lang="en")
     each file in css
       link(rel="stylesheet", href=file)
   body
-    .editarea(data-bind="visible: editing")
+    #editarea(data-bind="with: room" style="display:none;")
       .row
+        script(type="text/template", id="attributes-template")
+          .panel
+            .row
+              .medium-2.columns
+                label.inline Attribute Type
+                  select(data-bind="value: type")
+                    option(value="exit") Exit
+                    option(value="command") Command
+              .medium-3.columns
+                label.inline Command, or Exit Name
+                  input(type="text", data-bind="value: name")
+              .medium-2.columns
+                label.inline Direction Exit Moves
+                  select(data-bind="value: move")
+                    option(value="n") North
+                    option(value="s") South
+                    option(value="w") West
+                    option(value="e") East
+              .medium-3.columns
+                label.inline Item(s) Received
+                  input(type="text", data-bind="value: item")
+              .medium-2.columns.text-right
+                button.tiny.alert(data-bind="click: $parent.removeAttribute") Delete
+            .row
+              .medium-12.columns
+                div(data-bind="template: { foreach: availability, name: 'availability-template'}, sortableList: availability")
+                button.tiny(data-bind="click: addAvailabilityRow()") Add Availability Row
+
+        script(type="text/template", id="availability-template")
+          .panel
+            .row
+              .medium-3.columns
+                label.inline Required Items
+                  input(type="text", data-bind="value: items")
+              .medium-5.columns
+                label.inline Message if Passed
+                  input(type="text", data-bind="value: message")
+              .medium-2.columns
+                label.inline Makes Attribute Available?
+                  input(type="checkbox", data-bind="checked: available")
+              .medium-2.columns.text-right
+                button.tiny.alert(data-bind="click: $parent.removeAvailability") Delete
+
         .medium-6.columns
           h2 Room(
-            span(data-bind="text: room.data.x")
+            span(data-bind="text: data.x")
             | ,
-            span(data-bind="text: room.data.y")
+            span(data-bind="text: data.y")
             | )
+            button.small(data-bind="click: $parent.saveRoom") Save
           label Name
-            input(type="text", data-bind="value: room.data.name")
-          label Description
-            textarea(data-bind="value: room.data.description")
-            div.text-right(data-bind="text: room.data.description().length")
+            input(type="text", data-bind="value: data.name")
           label Map
-            input(type="text", data-bind="value: room.data.map")
-          button.small.button(data-bind="click: updateRoom") Save
-
-        .medium-6.columns
-          h3 Exits
-          div#exitsEditor.editor
-
+            input(type="text", data-bind="value: data.map")
       .row
-        .medium-6.columns
-          h3 Commands
-          div#commandsEditor.editor
-        .medium-6.columns
-          h3 Items
-          div#itemsEditor.editor
+        .medium-12.columns
+          div(data-bind="template: { foreach: data.attributes, name: 'attributes-template' }")
+          button.tiny(data-bind="click: $parent.addAttributeRow") Add Attribute
 
-    .row
+    #roomarea.row
       .medium-12.columns
         h2 Rooms
         ul.rooms(data-bind="foreach: rooms")
           li(data-bind="click: $parent.selectRoom, css: {selected: selected(), occupied: occupied(), origin: origin()}")
 
-    .alert-box.warning(data-bind="visible: error, text: error", data-alert)
+      .alert-box.warning(data-bind="visible: error, text: error", data-alert)
 
     footer.row
       hr

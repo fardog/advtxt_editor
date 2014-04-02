@@ -9,10 +9,6 @@
 // @include at2x($path, [option] $ext: "jpg", [optional] $width: auto, [optional] $height: auto);
 @import '../bower_components/retina.js/src/_retina.scss';
 
-.editor {
-	height: 300px;
-}
-
 .alert-box {
 	position: fixed;
 	top: 0;
@@ -20,7 +16,25 @@
 	right: 0;
 }
 
-// Define all your styles past this line.
+#editarea {
+	.panel {
+		padding: 0.5rem;
+
+		& > .panel {
+			padding-bottom: 1rem;
+		}
+
+		label {
+			margin: 0;
+			padding: 0;
+		}
+
+		input {
+			margin-bottom: 0;
+		}
+	}
+}
+
 .rooms {
 	@include block-grid(
     $per-row: 21,

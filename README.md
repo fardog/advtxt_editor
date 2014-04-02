@@ -4,7 +4,8 @@ AdvTxt Editor
 The AdvTxt Editor is a quickly-assembed app for editing [AdvTxt][advtxt] rooms.
 
 What follows is an off-the-cuff explanation of how to get things running, but 
-it's probably incomplete. I'll fill this out more when the time comes.
+it's probably incomplete. This editor is sort of nasty and is only provided to 
+get the job at hand done, not to be pretty or friendly while doing it.
 
 Get the Editor Running
 ----------------------
@@ -59,108 +60,65 @@ Visit http://localhost:8002 and you'll see the interface.
 How it all Works
 ----------------
 
-Once you start up the editor, you'll notice a 21&times;21 grid is displayed. 
-The grid size is hard coded, but there's no reason it couldn't be bigger. The 
-middle square is `(0, 0)`.
+The room grid which is first displayed is a 21&times;21 grid, with `[0,0]` at 
+the center. The size of the grid is hard-coded, and can trivially be increased 
+in size. 
 
-Right now, the way rooms work is somewhat in flux, but it's pretty 
-straightforward. The *Exits*, *Commands*, and *Items* fields are Javascript, 
-which is directly `eval`'d by the [advtxt][advtxt] client. The local variables 
-available at that time include `player`, where you should be expecting your 
-code to land. So an example *Commands* blob might be:
+Each room has attributes, with the following core types. Internally, everything 
+is always lowercased before processing.
 
-```
-player.room.commands = {
-    look: function(player) {
-        if (player.items.key) {
-            return "It looks like your key might open the northern door…";
-        }
-        return "It looks like the northern door is locked.";
-    }
-};
-```
+### Core Room Attributes
 
-This will make the "look" command available to this room, returning the message 
-to the player when they issue it. If they have a key in hand, they'll see a 
-different message.
+- Exit
+- Command
 
-Exits work much the same. A more advanced example:
+Each of these has some common sub-attributes. There is a special command for 
+each room that should be set, called "enter". This command is executed each 
+time the user enters the room.
 
-```
-player.room.exits = {
-    north: {
-        available: function(player) {
-            if (player.items.key) return true;
-            return "You need a key to open this door.";
-        },
-        go: function(player) {
-            return "You use your key to open the lock, and continue onward.";
-        },
-        name: 'north',
-        short_name: 'n'
-    },
-    south: {
-        available: function(player) { return true;},
-        go: function(player) {
-            return "You head south…";
-        },
-        name: 'south',
-        short_name: 's'
-    },
-    west: {
-        available: function(player) { return true;},
-        go: function(player) {
-            return "You head west…";
-        },
-        name: 'west',
-        short_name: 'w'
-    }
-};
-```
+### Common Sub-Attributes
 
-Here we see where a player can go *south*, or *west*, but if they have a key 
-they can also go *north*. Right now, only Cardinal directions are supported, 
-although it's only because the command interpreter is extremely simplistic.
+- Name — If it's an exit, this is the exit's name ("north", "door", etc…), if 
+it's a command, this is the action word/words ("get", "jump", "push")
+- Move — If passed, you move in the direction specified (8-way cardinal 
+directions)
+- Item — If passed, you get or lose these items. Gotten items are specified with 
+a "+" in front, lost with a "-". Items are just string identifiers that are 
+matched against with a Javascript `===` after being lowercased. For example: 
+"+key" gives you an item called "key", "-key" takes that key away, if you have 
+it.
 
-Now *Items*:
+### Availability Hierarchy
 
-```
-player.room.items = {
-    key: {
-        available: function(player) { 
-            if (player.items.key) return false;
-            return true; 
-        },
-        name: 'key',
-        short_name: 'key',
-        get: function(player) {
-            return "You pick up the key…";
-        }
-    }
-};
-```
+The availability hierarchy is how an exit, item, or command is determined to be 
+available. You need at least one of these, or else your room attribute won't 
+work.
 
-This should be straightforward at this point.
+The availability hierarchy is processed in order. The first one to pass is used 
+and determines if the room attribute is available, and no further items in the 
+hierarchy are processed. Each item in the hierarchy has the following 
+attributes:
 
-The only other thing to mention is setting the player's status. This is if you 
-need to kill them, or set them as winners, such as:
+- Required Items — A comma-separated list of required items. All in the list 
+are required.
+- Messages — The message to be played on pass.
+- Available — Boolean of whether this item makes the attribute available or not.
 
-```
-player.status = "win"; // player wins
-player.status = "dead"; // player dies
-```
+So you can build somewhat complex trees that flow down the line. Imagine a 
+hierarchy list with these items:
 
-Since the stuff in these fields is just eval'd by the client, obviously no 
-client process should **ever** have access to modify the database. This was a 
-convenient way to build the game, but isn't meant for users to edit their own 
-maps.
+| Required Items   | Message                                                           | Avl.  |
+|:----------------:|:-----------------------------------------------------------------:|:-----:|
+| `key,flashlight` | "You turn on your flashlight, and use your key to open the door." | true  |
+| `key`            | "You unlock the door, but it's entirely too dark to continue."    | false |
+| null             | "The door appears to be locked."                                  | false |
 
-The other items available in the editor:
+You can imagine some pretty complex systems, especially since an item can be 
+anything ("sunny disposition", "the flu", etc…).
 
-- Name: The room's name. Not used in the client currently.
-- Description: Read to the player whenever they enter the room.
-- Map: Right now, only `default` is by the client, but later this could support 
-multiple maps.
+### Aliases
+
+Aliases will be stored in the database, and are coming sometime soon.
 
 
 The MIT License (MIT)
