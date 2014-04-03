@@ -7,6 +7,53 @@ $(document).ready(function() {
 	// initialize Foundation
 	$(document).foundation();
 
+  var stringToJSON = function(s) {
+    if (typeof s !== 'undefined' && s) {
+      if (s.length <= 0) {
+        return null;
+      }
+      try {
+        s = JSON.parse(s);
+      }
+      catch (e) {
+        return s;
+      }
+    }
+
+    return s;
+  };
+
+  var directionStringToMoveArray = function(s) {
+    switch(s) {
+      case "n":
+        return [0, -1];
+      case "s":
+        return [0, 1];
+      case "w":
+        return [1, 0];
+      case "e":
+        return [-1, 0];
+    }
+
+    return null;
+  };
+
+  var directionStringFromMoveArray = function(a) {
+    if (a.length !== 2) {
+      return null;
+    }
+
+    a[0] = parseInt(a[0]);
+    a[1] = parseInt(a[1]);
+
+    if (a[0] === 0) {
+      if (a[1] === 1) return "s";
+      else return "n";
+    }
+    else if (a[0] === 1) return "w";
+    else return "e";
+  };
+
 
   /**
    * Creates a new representation of a Room in the editor.
@@ -70,11 +117,11 @@ $(document).ready(function() {
     }.bind(this);
   };
 
-  var Attributes = function(type, name, move, item, availability) {
+  var Attributes = function(type, name, move, items, availability) {
     this.type = ko.observable(type);
     this.name = ko.observable(name);
     this.move = ko.observable(move);
-    this.item = ko.observable(item);
+    this.items = ko.observable(items);
 
     this.availability = ko.observableArray(availability);
 
@@ -94,8 +141,8 @@ $(document).ready(function() {
       var json = {
         type: this.type(),
         name: this.name(),
-        move: this.move(),
-        item: this.item(),
+        move: directionStringToMoveArray(this.move()),
+        items: stringToJSON(this.items()),
         availability: []
       };
 
@@ -111,8 +158,8 @@ $(document).ready(function() {
 
       self.type(json.type);
       self.name(json.name);
-      self.move(json.move);
-      self.item(json.item);
+      self.move(directionStringFromMoveArray(json.move));
+      self.items(JSON.stringify(json.items));
 
       json.availability.forEach(function (availability) {
         self.availability.push(new Availability().fromJSON(availability));
@@ -129,7 +176,7 @@ $(document).ready(function() {
 
     this.toJSON = function() {
       var json = {
-        items: this.items(),
+        items: stringToJSON(this.items()),
         message: this.message(),
         available: this.available()
       };
@@ -138,7 +185,7 @@ $(document).ready(function() {
     }.bind(this);
 
     this.fromJSON = function(json) {
-      this.items(json.items);
+      this.items(JSON.stringify(json.items));
       this.message(json.message);
       this.available(json.available);
 

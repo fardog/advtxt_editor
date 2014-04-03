@@ -29,15 +29,16 @@ html(lang="en")
               .medium-2.columns
                 label.inline Direction Exit Moves
                   select(data-bind="value: move")
+                    option(value="") None
                     option(value="n") North
                     option(value="s") South
                     option(value="w") West
                     option(value="e") East
               .medium-3.columns
                 label.inline Item(s) Received
-                  input(type="text", data-bind="value: item")
+                  input(type="text", data-bind="value: items")
               .medium-2.columns.text-right
-                button.tiny.alert(data-bind="click: $parent.removeAttribute") Delete
+                button.tiny.alert(data-bind="click: $parent.data.removeAttribute") Delete
             .row
               .medium-12.columns
                 div(data-bind="template: { foreach: availability, name: 'availability-template'}, sortableList: availability")
