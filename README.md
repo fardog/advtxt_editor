@@ -67,6 +67,12 @@ in size.
 Each room has attributes, with the following core types. Internally, everything 
 is always lowercased before processing.
 
+**Note:** Any fields with an _(array)_ listed next to the label expects you to 
+enter a JSON-style array in that field. There is no checking on the frontend; 
+bizarre things may happen if you don't enter things correct. 
+
+Example: `["+item 1", "+item 2", "-item3"]` or `"+item 1"` if only one item.
+
 ### Core Room Attributes
 
 - Exit
@@ -86,7 +92,7 @@ directions)
 a "+" in front, lost with a "-". Items are just string identifiers that are 
 matched against with a Javascript `===` after being lowercased. For example: 
 "+key" gives you an item called "key", "-key" takes that key away, if you have 
-it.
+it. Any item without a "+" or "-" in front will be assumed to mean "+".
 
 ### Availability Hierarchy
 

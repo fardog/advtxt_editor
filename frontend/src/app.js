@@ -1,3 +1,10 @@
+/**
+ * @overview The frontend application for the AdvTxt editor.
+ *
+ * @since 0.0.1
+ * @copyright 2014 Nathan Wittstock <code@fardogllc.com>
+ * @license MIT - See included 'LICENSE' file for details.
+ */
 ;'use strict';
 
 var $prefix = "http://advtxt.dev:1337/";
@@ -7,6 +14,15 @@ $(document).ready(function() {
 	// initialize Foundation
 	$(document).foundation();
 
+  /**
+   * Converts a JSON-like string to JSON, in the way the AdvTxt backend expects.
+   *
+   * @since 0.1.0
+   * @param {string} s - The string to be parsed to JSON
+   *
+   * @returns {object} JSON object on pass, unmodified string on fail, null on 
+   *  undefined or falsey string.
+   */
   var stringToJSON = function(s) {
     if (typeof s !== 'undefined' && s) {
       if (s.length <= 0) {
@@ -23,6 +39,14 @@ $(document).ready(function() {
     return s;
   };
 
+  /**
+   * Changes a 1 character directional string to a "move" array for storage.
+   *
+   * @since 0.1.0
+   * @param {string} s - Character representing the direction to move.
+   *
+   * @returns {array} move
+   */
   var directionStringToMoveArray = function(s) {
     switch(s) {
       case "n":
@@ -38,6 +62,14 @@ $(document).ready(function() {
     return null;
   };
 
+  /**
+   * Changes a move array back to a 1 character directional string.
+   *
+   * @since 0.1.0
+   * @param {array} a - Move array
+   *
+   * @returns {string} move
+   */
   var directionStringFromMoveArray = function(a) {
     if (a.length !== 2) {
       return null;
@@ -58,12 +90,16 @@ $(document).ready(function() {
   /**
    * Creates a new representation of a Room in the editor.
    *
+   * @since 0.1.0
+   *
    * @param {int} x - Room's "x" coordinate
    * @param {int} y - Room's "y" coordinate
    * @param {string} name - Room's name
    * @param {string} map - The string representing the map this room is 
    *  associated with. Will default to "default" if not provided.
-   * @param {array} attributes - The list of attributes attached to the room.
+   * @param {array} attributes - The list of Attribute attached to the room.
+   *
+   * @returns {this}
    */
   var Room = function(x, y, name, map, attributes) {
     this.name = ko.observable(name);
@@ -77,7 +113,7 @@ $(document).ready(function() {
 
     this.attributes = ko.observableArray(attributes);
 
-    this.addAttributes = function(attribute) {
+    this.addAttribute = function(attribute) {
       this.attributes.push(attribute);
     }.bind(this);
 
@@ -110,14 +146,28 @@ $(document).ready(function() {
       self.map(json.map);
 
       json.attributes.forEach(function (attribute) {
-        self.attributes.push(new Attributes().fromJSON(attribute));
+        self.attributes.push(new Attribute().fromJSON(attribute));
       });
 
       return self;
     }.bind(this);
   };
 
-  var Attributes = function(type, name, move, items, availability) {
+  /**
+   * An attribute array as represented in the frontend.
+   *
+   * @since 0.1.0
+   *
+   * @param {string} type - The type of move (either "exit" or "command" as of
+   *  0.1.0)
+   * @param {string} name - The name of the attribute.
+   * @param {string} move - The 1 character representation of the move direction
+   * @param {string} items - The JSON-style array string representing the items
+   * @param {array} availability - The Availability items as an array.
+   *
+   * @returns {this}
+   */
+  var Attribute = function(type, name, move, items, availability) {
     this.type = ko.observable(type);
     this.name = ko.observable(name);
     this.move = ko.observable(move);
@@ -169,6 +219,18 @@ $(document).ready(function() {
     }.bind(this);
   };
 
+  /**
+   * The object representing Availability on the frontend.
+   *
+   * @since 0.1.0
+   * @param {string} items - The JSON-like string representing an array of items
+   * @param {string} message - The message to be delivered to the player when 
+   *  that availability passes.
+   * @param {boolean} available - Whether or not this availability line makes 
+   *  the attribute available.
+   *
+   * @returns {this}
+   */
   var Availability = function(items, message, available) {
     this.items = ko.observable(items);
     this.message = ko.observable(message);
@@ -193,10 +255,22 @@ $(document).ready(function() {
     }.bind(this);
   };
 
+  /**
+   * The Knockout model representing the room editor on the frontend
+   *
+   * @since 0.1.0
+   *
+   * @param {Room} room - The room item.
+   * @param {object} raw - The json representation of the room that we got from 
+   *  the server/database.
+   * @param {function} save - The function to be called on room save.
+   *
+   * @returns {this}
+   */
   var roomModel = function(room, raw, save) {
     var self = this;
-    self.save = save;
 
+    self.save = save;
     // representation of our room as is sent to/from the server
 		self.room = {
       data: room,
@@ -204,7 +278,7 @@ $(document).ready(function() {
     };
 
     self.addAttributeRow = function() {
-      self.room.data.addAttributes(new Attributes());
+      self.room.data.addAttribute(new Attribute());
     };
 
     self.saveRoom = function() {
@@ -216,9 +290,9 @@ $(document).ready(function() {
 
 
 	/***
-	 * viewModel: a Knockout view model for our page.
+	 * gridModel: a Knockout view model for our page.
 	 */
-	var viewModel = function() {
+	var gridModel = function() {
 		var self = this;
 
 		self.room = null; 
@@ -372,7 +446,7 @@ $(document).ready(function() {
 
 		// get the occupation status for all rooms, and populate the room grid
 		self.loadData('room/occupation', {}, self.getOccupationStatus);
-	}; /* end viewModel */
+	}; /* end gridModel */
 
 
   // adds a sortableList binding handler, which provides drag/drop reordering 
@@ -400,6 +474,6 @@ $(document).ready(function() {
 
 
 	// Apply our Knockout bindings
-	var view = new viewModel();
-	ko.applyBindings(view, $('#roomarea')[0]);
+	var grid = new gridModel();
+	ko.applyBindings(grid, $('#gridarea')[0]);
 });

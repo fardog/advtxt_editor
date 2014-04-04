@@ -9,6 +9,16 @@
 // @include at2x($path, [option] $ext: "jpg", [optional] $width: auto, [optional] $height: auto);
 @import '../bower_components/retina.js/src/_retina.scss';
 
+$base-line-height: 1.5rem;
+
+@for $i from 0 through 5 {
+	.leader-#{$i}  { margin-top:    $i * $base-line-height; }
+	.trailer-#{$i} { margin-bottom: $i * $base-line-height; }
+}
+
+.leader-half  { margin-top:    0.5 * $base-line-height; }
+.trailer-half { margin-bottom: 0.5 * $base-line-height; }
+
 .alert-box {
 	position: fixed;
 	top: 0;
@@ -20,8 +30,17 @@
 	.panel {
 		padding: 0.5rem;
 
-		& > .panel {
+		button {
+			margin-bottom: 0;
+		}
+
+		& .panel {
 			padding-bottom: 1rem;
+			margin-bottom: 1rem;
+			
+			label {
+				font-size: 0.75rem;
+			}
 		}
 
 		label {

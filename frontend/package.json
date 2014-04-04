@@ -1,6 +1,6 @@
 {
   "name": "advtxt_editor-frontend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The frontend application for the AdvTxt editor.",
   "main": "index.js",
   "author": "Nathan Wittstock <code@fardogllc.com>",

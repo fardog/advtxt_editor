@@ -15,7 +15,7 @@ html(lang="en")
   body
     #editarea(data-bind="with: room" style="display:none;")
       .row
-        script(type="text/template", id="attributes-template")
+        script(type="text/template", id="attribute-template")
           .panel
             .row
               .medium-2.columns
@@ -35,9 +35,9 @@ html(lang="en")
                     option(value="w") West
                     option(value="e") East
               .medium-3.columns
-                label.inline Item(s) Received
+                label.inline Item(s) Received (array)
                   input(type="text", data-bind="value: items")
-              .medium-2.columns.text-right
+              .medium-2.columns.leader-1.text-right
                 button.tiny.alert(data-bind="click: $parent.data.removeAttribute") Delete
             .row
               .medium-12.columns
@@ -47,16 +47,16 @@ html(lang="en")
         script(type="text/template", id="availability-template")
           .panel
             .row
-              .medium-3.columns
-                label.inline Required Items
+              .medium-2.columns
+                label.inline Required Items (array)
                   input(type="text", data-bind="value: items")
               .medium-5.columns
                 label.inline Message if Passed
                   input(type="text", data-bind="value: message")
-              .medium-2.columns
+              .medium-3.columns.leader-1
                 label.inline Makes Attribute Available?
                   input(type="checkbox", data-bind="checked: available")
-              .medium-2.columns.text-right
+              .medium-2.columns.leader-1.text-right
                 button.tiny.alert(data-bind="click: $parent.removeAvailability") Delete
 
         .medium-6.columns
@@ -72,10 +72,10 @@ html(lang="en")
             input(type="text", data-bind="value: data.map")
       .row
         .medium-12.columns
-          div(data-bind="template: { foreach: data.attributes, name: 'attributes-template' }")
+          div(data-bind="template: { foreach: data.attributes, name: 'attribute-template' }")
           button.tiny(data-bind="click: $parent.addAttributeRow") Add Attribute
 
-    #roomarea.row
+    #gridarea.row
       .medium-12.columns
         h2 Rooms
         ul.rooms(data-bind="foreach: rooms")
