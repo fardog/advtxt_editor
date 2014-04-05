@@ -54,9 +54,9 @@ $(document).ready(function() {
       case "s":
         return [0, 1];
       case "w":
-        return [1, 0];
-      case "e":
         return [-1, 0];
+      case "e":
+        return [1, 0];
     }
 
     return null;
@@ -82,8 +82,8 @@ $(document).ready(function() {
       if (a[1] === 1) return "s";
       else return "n";
     }
-    else if (a[0] === 1) return "w";
-    else return "e";
+    else if (a[0] === 1) return "e";
+    else return "w";
   };
 
 
